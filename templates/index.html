@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mr. Mouhmed Shaban</title>
+  <link rel="icon" href="/static/logo.png" type="image/png">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=My+Soul&family=Noto+Serif:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background: url('/static/bg.png') no-repeat center center fixed;
+      background-size: cover;
+      color: white;
+      font-family: 'Noto Serif', serif;
+      padding: 20px;
+      margin: 0;
+    }
+
+    .card {
+      background-color: rgba(30, 41, 59, 0.95);
+      border-radius: 15px;
+      padding: 25px;
+      max-width: 700px;
+      margin: auto;
+    }
+
+    h1 {
+      text-align: center;
+      color: #facc15;
+      font-family: 'My Soul', cursive;
+      font-size: 48px;
+    }
+
+    .logo {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      width: 120px;
+      cursor: pointer;
+    }
+
+    label, select, input, button {
+      width: 100%;
+      margin-top: 10px;
+      font-size: 16px;
+      font-family: 'Noto Serif', serif;
+    }
+
+    select, input {
+      padding: 10px;
+      border-radius: 8px;
+      border: 2px solid #334155;
+      background-color: white;
+      color: black;
+    }
+
+    button {
+      background-color: #facc15;
+      color: #1e1e2e;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 15px;
+      cursor: pointer;
+      font-family: 'Noto Serif', serif;
+    }
+
+    button:hover {
+      background-color: #fde047;
+    }
+
+    .answers {
+      margin-top: 20px;
+      max-height: 250px;
+      overflow-y: auto;
+    }
+
+    .answer-group {
+      display: grid;
+      grid-template-columns: 50px 1fr 50px;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .answer-group label {
+      text-align: right;
+      font-weight: bold;
+      color: #facc15;
+    }
+
+    .delete-btn {
+      background-color: #e74c3c;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    #password-screen {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: #0f172a;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      font-family: 'Noto Serif', serif;
+    }
+
+    #password-screen input {
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 10px;
+      font-size: 18px;
+    }
+
+    #password-screen button {
+      margin-top: 15px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 30px 0 10px;
+      font-size: 14px;
+      background-color: rgba(0, 0, 0, 0.3);
+      margin-top: 40px;
+      font-family: 'Noto Serif', serif;
+    }
+
+    footer a {
+      color: #facc15;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- باقي الكود كما هو -->
+
+  <a href="https://web.facebook.com/mohamed.m.derbala" target="_blank">
+    <img src="/static/logo.png" class="logo" />
+  </a>
+
+  <div id="password-screen">
+    <h2>🔐 Enter Access Password</h2>
+    <input type="password" id="site-password" placeholder="Enter password..." />
+    <button onclick="checkPassword()">Enter</button>
+  </div>
+
+  <div class="card" style="display:none" id="main-form">
+    <h1>🎧 Mr. Mouhmed Shaban</h1>
+    <form action="/generate" method="POST">
+      <label>Output File Name:</label>
+      <input type="text" name="filename" id="filename" placeholder="e.g. answers" required>
+
+      <label>Unit:</label>
+      <select name="unit" id="unit">
+        <option>Unit 1</option><option>Unit 2</option><option>Unit 3</option>
+        <option>Unit 4</option><option>Unit 5</option><option>Unit 6</option>
+        <option>Unit 7</option><option>Unit 8</option><option>Unit 9</option>
+        <option>Unit 10</option><option>Unit 11</option><option>Unit 12</option>
+      </select>
+
+      <label>Part:</label>
+      <select name="part" id="part">
+        <option>Part One</option>
+        <option>Part Two</option>
+      </select>
+
+      <label>Item:</label>
+      <select name="item" id="item">
+        <option>Grammar</option>
+        <option>Vocabulary</option>
+      </select>
+
+      <label>Page Number:</label>
+      <input type="text" name="page" placeholder="Enter Page Number (e.g., 1)" id="page" />
+
+      <label>Speed:</label>
+      <select name="speed" id="speed">
+        <option value="1.0">🟢 Normal</option>
+        <option value="0.85">🟡 Slow</option>
+        <option value="0.7">🔴 Very Slow</option>
+      </select>
+
+      <div class="answers" id="answers">
+        <label>Answers:</label>
+        <div class="answer-group">
+          <label>1:</label>
+          <select name="answers[]">
+            <option value="">Select</option>
+            <option>A</option><option>B</option><option>C</option><option>D</option>
+          </select>
+          <button type="button" class="delete-btn" onclick="removeAnswer(this)">🗑️</button>
+        </div>
+      </div>
+
+      <button type="button" onclick="addAnswer()">➕ Add Answer</button>
+      <button type="submit">🎙️ Generate Audio</button>
+      <button type="button" onclick="clearInputs()" style="background:#e74c3c; color:white;">🧹 Clear Inputs</button>
+      <button type="button" onclick="logout()" style="background:#555; color:white;">🚪 Logout</button>
+    </form>
+  </div>
+
+<footer>
+  <p>
+    Developed By 
+    <a href="https://web.facebook.com/MSANGAK27" target="_blank">Mouhmed Sangak</a><br><br>
+    All Copy Rights Reserved © 2025
+  </p>
+</footer>
+
+  <script>
+    const answerContainer = document.getElementById('answers');
+    let answerCount = 1;
+
+    function addAnswer() {
+      answerCount++;
+      const div = document.createElement('div');
+      div.className = 'answer-group';
+      div.innerHTML = `
+        <label>${answerCount}:</label>
+        <select name="answers[]">
+          <option value="">Select</option>
+          <option>A</option><option>B</option><option>C</option><option>D</option>
+        </select>
+        <button type="button" class="delete-btn" onclick="removeAnswer(this)">🗑️</button>
+      `;
+      answerContainer.appendChild(div);
+      scrollToBottom();
+      saveToLocal();
+    }
+
+    function removeAnswer(btn) {
+      btn.parentElement.remove();
+      updateLabels();
+      saveToLocal();
+    }
+
+    function updateLabels() {
+      const labels = answerContainer.querySelectorAll('.answer-group label');
+      labels.forEach((lbl, i) => lbl.textContent = `${i + 1}:`);
+      answerCount = labels.length;
+    }
+
+    function scrollToBottom() {
+      answerContainer.scrollTop = answerContainer.scrollHeight;
+    }
+
+    document.addEventListener('keydown', function(event) {
+      const pwScreen = document.getElementById("password-screen");
+      if (pwScreen.style.display !== "none" && event.key === "Enter") {
+        checkPassword();
+      }
+
+      const selects = answerContainer.querySelectorAll('select[name="answers[]"]');
+      if (selects.length === 0) return;
+      const combo = selects[selects.length - 1];
+
+      if (event.key === 'Enter') {
+        event.preventDefault();
+        addAnswer();
+      }
+
+      const keyMap = {
+        '1': 'A', '2': 'B', '3': 'C', '4': 'D',
+        'a': 'A', 'b': 'B', 'c': 'C', 'd': 'D'
+      };
+      if (keyMap[event.key.toLowerCase()]) {
+        combo.value = keyMap[event.key.toLowerCase()];
+        saveToLocal();
+      }
+    });
+
+    function saveToLocal() {
+      localStorage.setItem("unit", document.getElementById("unit").value);
+      localStorage.setItem("part", document.getElementById("part").value);
+      localStorage.setItem("item", document.getElementById("item").value);
+      localStorage.setItem("page", document.getElementById("page").value);
+      localStorage.setItem("filename", document.getElementById("filename").value);
+
+      const answers = [...document.querySelectorAll('select[name="answers[]"]')].map(sel => sel.value);
+      localStorage.setItem("answers", JSON.stringify(answers));
+    }
+
+    function restoreFromLocal() {
+      document.getElementById("unit").value = localStorage.getItem("unit") || "Unit 1";
+      document.getElementById("part").value = localStorage.getItem("part") || "Part One";
+      document.getElementById("item").value = localStorage.getItem("item") || "Grammar";
+      document.getElementById("page").value = localStorage.getItem("page") || "";
+      document.getElementById("filename").value = localStorage.getItem("filename") || "answers";
+
+      const savedAnswers = JSON.parse(localStorage.getItem("answers") || "[]");
+      const container = document.getElementById("answers");
+      container.innerHTML = "";
+      answerCount = 0;
+      savedAnswers.forEach((val, i) => {
+        answerCount++;
+        const div = document.createElement('div');
+        div.className = 'answer-group';
+        div.innerHTML = `
+          <label>${answerCount}:</label>
+          <select name="answers[]">
+            <option value="">Select</option>
+            <option${val === 'A' ? ' selected' : ''}>A</option>
+            <option${val === 'B' ? ' selected' : ''}>B</option>
+            <option${val === 'C' ? ' selected' : ''}>C</option>
+            <option${val === 'D' ? ' selected' : ''}>D</option>
+          </select>
+          <button type="button" class="delete-btn" onclick="removeAnswer(this)">🗑️</button>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function clearInputs() {
+      document.getElementById("page").value = "";
+      document.getElementById("filename").value = "";
+      saveToLocal();
+    }
+
+    function logout() {
+      document.getElementById("main-form").style.display = "none";
+      document.getElementById("password-screen").style.display = "flex";
+    }
+
+    function checkPassword() {
+      const pw = document.getElementById("site-password").value;
+      if (pw === "27042007") {
+        localStorage.setItem("authenticated", "true");
+        document.getElementById("password-screen").style.display = "none";
+        document.getElementById("main-form").style.display = "block";
+        restoreFromLocal();
+      } else {
+        alert("Wrong password");
+      }
+    }
+
+    window.onload = () => {
+      if (localStorage.getItem("authenticated") === "true") {
+        document.getElementById("password-screen").style.display = "none";
+        document.getElementById("main-form").style.display = "block";
+        restoreFromLocal();
+      }
+    }
+  </script>
+</body>
+</html>
